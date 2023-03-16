@@ -399,8 +399,8 @@ public final class System {
     public static native long nanoTime();
 
     /**
-     * Copies an array from the specified source array, beginning at the
-     * specified position, to the specified position of the destination array.
+     * Copies an array from the specified source array, beginning at the        从指定的源数组中复制一个数组，以指定的位置开始，
+     * specified position, to the specified position of the destination array.  到目标数组的指定位置结束。
      * A subsequence of array components are copied from the source
      * array referenced by <code>src</code> to the destination array
      * referenced by <code>dest</code>. The number of components copied is
@@ -477,11 +477,11 @@ public final class System {
      * paragraph effectively applies only to the situation where both
      * arrays have component types that are reference types.)
      *
-     * @param      src      the source array.
-     * @param      srcPos   starting position in the source array.
-     * @param      dest     the destination array.
-     * @param      destPos  starting position in the destination data.
-     * @param      length   the number of array elements to be copied.
+     * @param      src      the source array.                           源数组
+     * @param      srcPos   starting position in the source array.      源数组中开始位置
+     * @param      dest     the destination array.                      目标数组
+     * @param      destPos  starting position in the destination data.  目标数组开始位置
+     * @param      length   the number of array elements to be copied.  要复制的数组元素个数
      * @exception  IndexOutOfBoundsException  if copying would cause
      *               access of data outside array bounds.
      * @exception  ArrayStoreException  if an element in the <code>src</code>

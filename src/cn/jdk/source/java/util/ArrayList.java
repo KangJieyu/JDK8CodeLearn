@@ -31,64 +31,64 @@ import java.util.function.UnaryOperator;
 import sun.misc.SharedSecrets;
 
 /**
- * Resizable-array implementation of the <tt>List</tt> interface.  Implements
- * all optional list operations, and permits all elements, including
- * <tt>null</tt>.  In addition to implementing the <tt>List</tt> interface,
- * this class provides methods to manipulate the size of the array that is
- * used internally to store the list.  (This class is roughly equivalent to
+ * Resizable-array implementation of the <tt>List</tt> interface.  Implements   List 接口实现的可变数组。实现了所有可选的 list 操作，
+ * all optional list operations, and permits all elements, including            并且允许存储所有的元素，包括 null。
+ * <tt>null</tt>.  In addition to implementing the <tt>List</tt> interface,     除了实现 List 接口，这个类提供了一些方法去改变内部存储 list
+ * this class provides methods to manipulate the size of the array that is      元素的数组的大小。
+ * used internally to store the list.  (This class is roughly equivalent to     (这个类和 Vector 大致是等效的，除了 ArrayList 是非同步的。)
  * <tt>Vector</tt>, except that it is unsynchronized.)
  *
- * <p>The <tt>size</tt>, <tt>isEmpty</tt>, <tt>get</tt>, <tt>set</tt>,
- * <tt>iterator</tt>, and <tt>listIterator</tt> operations run in constant
- * time.  The <tt>add</tt> operation runs in <i>amortized constant time</i>,
- * that is, adding n elements requires O(n) time.  All of the other operations
- * run in linear time (roughly speaking).  The constant factor is low compared
- * to that for the <tt>LinkedList</tt> implementation.
+ * <p>The <tt>size</tt>, <tt>isEmpty</tt>, <tt>get</tt>, <tt>set</tt>,          size，isEmpty，get，set，iterator 和 listIterator
+ * <tt>iterator</tt>, and <tt>listIterator</tt> operations run in constant      方法在常数时间内执行。
+ * time.  The <tt>add</tt> operation runs in <i>amortized constant time</i>,    add 方法在"分摊常数时间"内执行，也可以说，添加一个元素
+ * that is, adding n elements requires O(n) time.  All of the other operations  需要 O(n) 时间。
+ * run in linear time (roughly speaking).  The constant factor is low compared  所有其他的操作在线性时间內(通常来说)。
+ * to that for the <tt>LinkedList</tt> implementation.                          常量因素 比 LinkedList 的实现是小的。
  *
- * <p>Each <tt>ArrayList</tt> instance has a <i>capacity</i>.  The capacity is
- * the size of the array used to store the elements in the list.  It is always
- * at least as large as the list size.  As elements are added to an ArrayList,
- * its capacity grows automatically.  The details of the growth policy are not
- * specified beyond the fact that adding an element has constant amortized
+ * <p>Each <tt>ArrayList</tt> instance has a <i>capacity</i>.  The capacity is  每个 ArrayList 实例有一个 capacity(容量)。
+ * the size of the array used to store the elements in the list.  It is always  这个容量是在 list 中存储元素的数组的大小。
+ * at least as large as the list size.  As elements are added to an ArrayList,  容量总是至少和 list 的大小一样大。当元素添加到 ArrayList
+ * its capacity grows automatically.  The details of the growth policy are not  中时，ArrayList 的容量会自动的增长。增长的策略不是固定的，除了
+ * specified beyond the fact that adding an element has constant amortized      添加一个元素要花费分摊常量时间的事实外。
  * time cost.
  *
- * <p>An application can increase the capacity of an <tt>ArrayList</tt> instance
- * before adding a large number of elements using the <tt>ensureCapacity</tt>
+ * <p>An application can increase the capacity of an <tt>ArrayList</tt> instance    通过使用 ensureCapacity 方法，在添加许多元素之前，
+ * before adding a large number of elements using the <tt>ensureCapacity</tt>       ArrayList 的容量能够增长。这个可能会减少增长数量的再分配。
  * operation.  This may reduce the amount of incremental reallocation.
  *
- * <p><strong>Note that this implementation is not synchronized.</strong>
- * If multiple threads access an <tt>ArrayList</tt> instance concurrently,
- * and at least one of the threads modifies the list structurally, it
- * <i>must</i> be synchronized externally.  (A structural modification is
- * any operation that adds or deletes one or more elements, or explicitly
+ * <p><strong>Note that this implementation is not synchronized.</strong>       注意这个类的实现不是同步的。
+ * If multiple threads access an <tt>ArrayList</tt> instance concurrently,      如果多个线程并发的访问一个 ArrayList，且至少一个线程修改
+ * and at least one of the threads modifies the list structurally, it           list 的结构，ArrayList 必须在外部同步。
+ * <i>must</i> be synchronized externally.  (A structural modification is       (一个结构化的修改是任何的 add 或 delete 操作元素，或者
+ * any operation that adds or deletes one or more elements, or explicitly       显示的调整 array 的大小；仅仅设置元素的值不是一个结构的修改。)
  * resizes the backing array; merely setting the value of an element is not
- * a structural modification.)  This is typically accomplished by
+ * a structural modification.)  This is typically accomplished by               这个通常实现是通过对自然封装 list 的一些对象上进行同步。
  * synchronizing on some object that naturally encapsulates the list.
  *
- * If no such object exists, the list should be "wrapped" using the
- * {@link Collections#synchronizedList Collections.synchronizedList}
+ * If no such object exists, the list should be "wrapped" using the      如果没有这样的对象存在，list 应该使用 Collections.synchronizedList
+ * {@link Collections#synchronizedList Collections.synchronizedList}     包裹起来。这个在创建的时候完成，以便于阻止意外非同步访问 list:
  * method.  This is best done at creation time, to prevent accidental
  * unsynchronized access to the list:<pre>
  *   List list = Collections.synchronizedList(new ArrayList(...));</pre>
  *
  * <p><a name="fail-fast">
- * The iterators returned by this class's {@link #iterator() iterator} and
- * {@link #listIterator(int) listIterator} methods are <em>fail-fast</em>:</a>
- * if the list is structurally modified at any time after the iterator is
- * created, in any way except through the iterator's own
- * {@link ListIterator#remove() remove} or
+ * The iterators returned by this class's {@link #iterator() iterator} and      这个类的 iterator 返回一个迭代器，且 listIterator 方法
+ * {@link #listIterator(int) listIterator} methods are <em>fail-fast</em>:</a>  是 "fail-fast":
+ * if the list is structurally modified at any time after the iterator is       如果迭代器被创建后在任何时候对 list 进行结构化的修改，
+ * created, in any way except through the iterator's own                        除了迭代器自己的 remove 或 add 方法，迭代器将抛出
+ * {@link ListIterator#remove() remove} or                                      ConcurrentModificationException 异常。
  * {@link ListIterator#add(Object) add} methods, the iterator will throw a
- * {@link ConcurrentModificationException}.  Thus, in the face of
- * concurrent modification, the iterator fails quickly and cleanly, rather
+ * {@link ConcurrentModificationException}.  Thus, in the face of               因此，在面对并发修改，迭代器会快速而干脆的失败，
+ * concurrent modification, the iterator fails quickly and cleanly, rather      而不是在将来的某个不确定时刻冒着任何风险、没有确定的行为。
  * than risking arbitrary, non-deterministic behavior at an undetermined
  * time in the future.
  *
- * <p>Note that the fail-fast behavior of an iterator cannot be guaranteed
- * as it is, generally speaking, impossible to make any hard guarantees in the
- * presence of unsynchronized concurrent modification.  Fail-fast iterators
+ * <p>Note that the fail-fast behavior of an iterator cannot be guaranteed      注意，不能保证迭代器 "fail-fast" 行为，一般来说，
+ * as it is, generally speaking, impossible to make any hard guarantees in the  在非同步并发修改发生的情况下不可能做任何有力的保证。
+ * presence of unsynchronized concurrent modification.  Fail-fast iterators     用最大的努力上 "fail-fast" 迭代器抛出 ConcurrentModificationException异常。
  * throw {@code ConcurrentModificationException} on a best-effort basis.
- * Therefore, it would be wrong to write a program that depended on this
- * exception for its correctness:  <i>the fail-fast behavior of iterators
+ * Therefore, it would be wrong to write a program that depended on this        因此，依靠这个异常能够检查出所写程序的错误: 迭代器的"fail-fast"
+ * exception for its correctness:  <i>the fail-fast behavior of iterators       应该被使用检测这个bugs。
  * should be used only to detect bugs.</i>
  *
  * <p>This class is a member of the
@@ -110,60 +110,60 @@ public class ArrayList<E> extends AbstractList<E>
     private static final long serialVersionUID = 8683452581122892189L;
 
     /**
-     * Default initial capacity.
+     * Default initial capacity. 默认的初始容量。
      */
     private static final int DEFAULT_CAPACITY = 10;
 
     /**
-     * Shared empty array instance used for empty instances.
+     * Shared empty array instance used for empty instances. 共享的空的数组实例——空的实例    初始容量为0时使用
      */
     private static final Object[] EMPTY_ELEMENTDATA = {};
 
     /**
-     * Shared empty array instance used for default sized empty instances. We
-     * distinguish this from EMPTY_ELEMENTDATA to know how much to inflate when
-     * first element is added.
+     * Shared empty array instance used for default sized empty instances. We   共享的空的数组实例，被默认大小的空实例来使用。
+     * distinguish this from EMPTY_ELEMENTDATA to know how much to inflate when 我们从 EMPTY_ELEMENTDATA 来区别这个，去知道当添加
+     * first element is added.                                                  第一个元素时扩张多少。 没有指定初始容量时使用
      */
     private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
 
     /**
-     * The array buffer into which the elements of the ArrayList are stored.
-     * The capacity of the ArrayList is the length of this array buffer. Any
-     * empty ArrayList with elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA
-     * will be expanded to DEFAULT_CAPACITY when the first element is added.
+     * The array buffer into which the elements of the ArrayList are stored.    存储 ArrayList 元素的数组缓存区。
+     * The capacity of the ArrayList is the length of this array buffer. Any    ArrayList 的容量是数组缓存区的长度。
+     * empty ArrayList with elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA    任何 elementData/DEFAULTCAPACITY_EMPTY_ELEMENTDATA
+     * will be expanded to DEFAULT_CAPACITY when the first element is added.    空的 ArrayList，当添加第一个元素时扩张到 DEFAULT_CAPACITY。
      */
     transient Object[] elementData; // non-private to simplify nested class access
 
     /**
-     * The size of the ArrayList (the number of elements it contains).
+     * The size of the ArrayList (the number of elements it contains).  ArrayList 的大小(包含元素的数量)。
      *
      * @serial
      */
     private int size;
 
     /**
-     * Constructs an empty list with the specified initial capacity.
+     * Constructs an empty list with the specified initial capacity. 用指定的初始容量创建一个空的 List。
      *
      * @param  initialCapacity  the initial capacity of the list
      * @throws IllegalArgumentException if the specified initial capacity
      *         is negative
      */
     public ArrayList(int initialCapacity) {
-        if (initialCapacity > 0) {
-            this.elementData = new Object[initialCapacity];
-        } else if (initialCapacity == 0) {
+        if (initialCapacity > 0) { // 初始容量合法且不为0
+            this.elementData = new Object[initialCapacity]; // 创建指定初始容量大小的数组
+        } else if (initialCapacity == 0) { // 初始容量为0时创建 final Object[] objs = {};
             this.elementData = EMPTY_ELEMENTDATA;
-        } else {
+        } else { // 初始容量不合法
             throw new IllegalArgumentException("Illegal Capacity: "+
                                                initialCapacity);
         }
     }
 
     /**
-     * Constructs an empty list with an initial capacity of ten.
+     * Constructs an empty list with an initial capacity of ten.    创建空的初始容量为 10 的链表的构造方法。
      */
     public ArrayList() {
-        this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
+        this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA; // 存储元素的数组 = 长度为0的数组(final)
     }
 
     /**
@@ -221,28 +221,28 @@ public class ArrayList<E> extends AbstractList<E>
             ensureExplicitCapacity(minCapacity);
         }
     }
-
+    /** 计算最小容量: 判断创建 ArrayList 后存储元素的数组是否为 final Object[] obj = {} */
     private static int calculateCapacity(Object[] elementData, int minCapacity) {
         if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
-            return Math.max(DEFAULT_CAPACITY, minCapacity);
+            return Math.max(DEFAULT_CAPACITY, minCapacity); // 返回 10 和 minCapacity 的最大值
         }
         return minCapacity;
     }
-
+    /** 确保内部的容量 */
     private void ensureCapacityInternal(int minCapacity) {
         ensureExplicitCapacity(calculateCapacity(elementData, minCapacity));
     }
-
+    /** 修改list结构化修改次数   是否扩容判断-> grow() */
     private void ensureExplicitCapacity(int minCapacity) {
-        modCount++;
+        modCount++; // list 结构化修改次数
 
         // overflow-conscious code
-        if (minCapacity - elementData.length > 0)
+        if (minCapacity - elementData.length > 0) // minCapacity > elementData.length 所需最小容量 > 存储元素的数组长度
             grow(minCapacity);
     }
 
     /**
-     * The maximum size of array to allocate.
+     * The maximum size of array to allocate.                   数组可分配大小的最大值。
      * Some VMs reserve some header words in an array.
      * Attempts to allocate larger arrays may result in
      * OutOfMemoryError: Requested array size exceeds VM limit
@@ -250,18 +250,18 @@ public class ArrayList<E> extends AbstractList<E>
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 
     /**
-     * Increases the capacity to ensure that it can hold at least the
+     * Increases the capacity to ensure that it can hold at least the   增长容量，确保能够存入至少指定的容量参数的元素数量。
      * number of elements specified by the minimum capacity argument.
      *
-     * @param minCapacity the desired minimum capacity
+     * @param minCapacity the desired minimum capacity 想要的最小容量
      */
     private void grow(int minCapacity) {
         // overflow-conscious code
-        int oldCapacity = elementData.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
-        if (newCapacity - minCapacity < 0)
+        int oldCapacity = elementData.length; // 存储元素数组的长度
+        int newCapacity = oldCapacity + (oldCapacity >> 1); // 原数组大小的 1.5 倍扩容
+        if (newCapacity - minCapacity < 0) // 扩容后的容量 < 所需最小容量->扩容后容量还是不够   这个所需最小容量直接赋值给新容量大小(newCapacity)
             newCapacity = minCapacity;
-        if (newCapacity - MAX_ARRAY_SIZE > 0)
+        if (newCapacity - MAX_ARRAY_SIZE > 0) // 扩容后的容量比数组大小的最大值还要大
             newCapacity = hugeCapacity(minCapacity);
         // minCapacity is usually close to size, so this is a win:
         elementData = Arrays.copyOf(elementData, newCapacity);
@@ -455,14 +455,14 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Appends the specified element to the end of this list.
+     * Appends the specified element to the end of this list. 往 list 的尾端添加一个元素。
      *
      * @param e element to be appended to this list
      * @return <tt>true</tt> (as specified by {@link Collection#add})
      */
     public boolean add(E e) {
         ensureCapacityInternal(size + 1);  // Increments modCount!!
-        elementData[size++] = e;
+        elementData[size++] = e; // 存储元素
         return true;
     }
 
@@ -523,13 +523,13 @@ public class ArrayList<E> extends AbstractList<E>
      * @return <tt>true</tt> if this list contained the specified element
      */
     public boolean remove(Object o) {
-        if (o == null) {
-            for (int index = 0; index < size; index++)
+        if (o == null) { // 删除的对象为 null
+            for (int index = 0; index < size; index++) // 循环找 null值
                 if (elementData[index] == null) {
-                    fastRemove(index);
+                    fastRemove(index); // 找到了 null 元素，要删除
                     return true;
                 }
-        } else {
+        } else { // 要删除的元素不为 null
             for (int index = 0; index < size; index++)
                 if (o.equals(elementData[index])) {
                     fastRemove(index);
@@ -540,16 +540,16 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /*
-     * Private remove method that skips bounds checking and does not
+     * Private remove method that skips bounds checking and does not    私有的删除方法，跳过边界的检查并且不会返回删除的值。
      * return the value removed.
      */
     private void fastRemove(int index) {
-        modCount++;
-        int numMoved = size - index - 1;
+        modCount++; // 结构化修改次数减1
+        int numMoved = size - index - 1; // 要删除位置的前一个元素
         if (numMoved > 0)
             System.arraycopy(elementData, index+1, elementData, index,
-                             numMoved);
-        elementData[--size] = null; // clear to let GC do its work
+                             numMoved); // 复制元素
+        elementData[--size] = null; // clear to let GC do its work 置空最后一个位置的元素，并将元素数量减1
     }
 
     /**

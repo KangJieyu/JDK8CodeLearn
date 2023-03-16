@@ -1,7 +1,7 @@
 关于JDK8源码的学习，其中含有源代码注释的翻译和阅读笔记。
 # 集合
 ## HashMap
-![img.png](images/HashMapRelation.png)
+![HashMap继承关系图](images/HashMapRelation.png)
 `HashMap` 和 `HashTable` 通常是等效的，主要差别在于空值的存储。
 
 影响 `HashMap` 性能的两个因素: **初始容量**和**加载因子**
@@ -158,6 +158,132 @@ public class HashMap {
          }
       }
       return null;
+   }
+}
+```
+## ArrayList
+![ArrayList继承关系图](images/ArrayListRelation.png)
+`ArrayList` 是一个可变的非线程安全的数组，可以存储任何元素，包括 `null` 值，存储值有序可重复。
+
+size，isEmpty，get，set，iterator 和 listIterator 方法时间复杂度在 常数 时间；
+add 方法时间复杂度在 O(n) 时间；
+其他操作 时间复杂度在 线性时间。
+
+同样存在 `fail-fast` 问题。可通过 `Iterator` 中的 `add` 和 `remove` 方法操作元素。
+
+`ArrayList` 中一些属性含义:
+```java
+public class ArrayList {
+    // 默认初始容量
+    private static final int DEFAULT_CAPACITY = 10;
+    // 创建 ArrayList 对象指定初始容量为 0 时使用 elementData = EMPTY_ELEMENTDATA
+    private static final Object[] EMPTY_ELEMENTDATA = {};
+    // 创建 ArrayList 对象不指定初始容量时使用 elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA
+    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
+    // 存储 ArrayList 的元素
+    transient Object[] elementData;
+    // ArrayList 中存储元素的个数
+    private int size;
+}
+```
+### ArrayList 对象创建
+1. 无参创建
+   
+   `elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;`
+2. 指定初始容量创建
+
+   1. 判断容量大于 0
+   
+      `elementData = new Object[容量];`
+   2. 判断容量等于 0
+      
+      `elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;`
+   3. 判断容量小于 0
+   
+      抛出异常
+### ArrayList 中 add 操作
+```java
+public class ArrayList { 
+    public boolean add(E e) {
+        // 确保内部的容量 检查容量是否够用，不够扩容
+        ensureCapacityInternal(size + 1);
+        elementData[size++] = e; // 存储元素
+        return true;
+   }
+   
+   private void ensureCapacityInternal(int minCapacity) {
+        // 扩容                   计算最小容量(其中判断 elementData 的地址——用无参构造的 ArrayList)
+        ensureExplicitCapacity(calculateCapacity(elementData, minCapacity));
+   }
+
+   /**
+    * 计算最小容量
+    */
+   private static int calculateCapacity(Object[] elementData, int minCapacity) {
+       // 不指定初始容量创建 ArrayList 后，elementData 为 final Object[] obj = {} 的情况
+       if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
+           // 只在第一次添加时可能进入
+           return Math.max(DEFAULT_CAPACITY, minCapacity); // 返回 10 和 minCapacity 的最大值
+       }
+       return minCapacity;
+   }
+
+   /**
+    * 结构化修改次数加1，确定清晰的容量，不够扩容
+    */
+   private void ensureExplicitCapacity(int minCapacity) {
+      // list 结构化修改次数
+      modCount++; 
+      if (minCapacity - elementData.length > 0) 
+          // minCapacity > elementData.length 所需最小容量 > 存储元素的数组长度 容量不够，扩容
+          grow(minCapacity);
+   }
+
+   /**
+    * 数组扩容
+    */
+   private void grow(int minCapacity) {
+      // 存储元素数组的长度
+      int oldCapacity = elementData.length;
+      // 原数组大小的 1.5 倍扩容
+      int newCapacity = oldCapacity + (oldCapacity >> 1);
+      // 扩容后的容量 < 所需最小容量->扩容后容量还是不够   这个所需最小容量直接赋值给新容量大小(newCapacity)
+      if (newCapacity - minCapacity < 0) 
+          newCapacity = minCapacity;
+      // 扩容后的容量比数组大小的最大值还要大 
+      if (newCapacity - MAX_ARRAY_SIZE > 0) 
+          newCapacity = hugeCapacity(minCapacity);
+      // minCapacity is usually close to size, so this is a win:
+      elementData = Arrays.copyOf(elementData, newCapacity);
+   }
+}
+```
+### ArrayList 中 remove 操作
+```java
+public class ArrayList {
+   public boolean remove(Object o) {
+      if (o == null) { // 删除的对象为 null
+         for (int index = 0; index < size; index++) // 循环找 null值
+            if (elementData[index] == null) {
+               fastRemove(index); // 找到了 null 元素，要删除
+               return true;
+            }
+      } else { // 要删除的元素不为 null
+         for (int index = 0; index < size; index++)
+            if (o.equals(elementData[index])) {
+               fastRemove(index);
+               return true;
+            }
+      }
+      return false;
+   }
+   private void fastRemove(int index) {
+      modCount++; // 结构化修改次数减1
+      int numMoved = size - index - 1; // 要删除位置的前一个元素
+      if (numMoved > 0)
+         System.arraycopy(elementData, index+1, elementData, index,
+                 numMoved); // 复制元素
+      elementData[--size] = null; // clear to let GC do its work 置空最后一个位置的元素，并将元素数量减1
    }
 }
 ```
