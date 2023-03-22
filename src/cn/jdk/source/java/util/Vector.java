@@ -33,24 +33,24 @@ import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
 /**
- * The {@code Vector} class implements a growable array of
- * objects. Like an array, it contains components that can be
- * accessed using an integer index. However, the size of a
- * {@code Vector} can grow or shrink as needed to accommodate
+ * The {@code Vector} class implements a growable array of                Vector 类实现了一个可增长的数组对象。
+ * objects. Like an array, it contains components that can be             像一个数组，它含有使用整数索引可访问成员。
+ * accessed using an integer index. However, the size of a                不过，在 Vector 被创建后，当需要去添加和删除条目时 Vector 的大小
+ * {@code Vector} can grow or shrink as needed to accommodate             能够变大或减少。
  * adding and removing items after the {@code Vector} has been created.
  *
- * <p>Each vector tries to optimize storage management by maintaining a
- * {@code capacity} and a {@code capacityIncrement}. The
- * {@code capacity} is always at least as large as the vector
- * size; it is usually larger because as components are added to the
+ * <p>Each vector tries to optimize storage management by maintaining a     每个 Vector 通过维持 capacity 和 capacityIncrement 尝试去
+ * {@code capacity} and a {@code capacityIncrement}. The                    优化存储处理手段。capacity 总是至少和 vector 的大小一样大；
+ * {@code capacity} is always at least as large as the vector               它通常是更大的，因为当元素被添加到 vector 中时，vector 的存储
+ * size; it is usually larger because as components are added to the        以 capacityIncrement 的大小块增加。
  * vector, the vector's storage increases in chunks the size of
- * {@code capacityIncrement}. An application can increase the
- * capacity of a vector before inserting a large number of
+ * {@code capacityIncrement}. An application can increase the               一个应用在插入一个大数量的成员前能够增加 vector 的 capacity；
+ * capacity of a vector before inserting a large number of                  这个可以减少增量重新分配的次数。
  * components; this reduces the amount of incremental reallocation.
  *
  * <p><a name="fail-fast">
- * The iterators returned by this class's {@link #iterator() iterator} and
- * {@link #listIterator(int) listIterator} methods are <em>fail-fast</em></a>:
+ * The iterators returned by this class's {@link #iterator() iterator} and          "fail-fast"问题：
+ * {@link #listIterator(int) listIterator} methods are <em>fail-fast</em></a>:      iterator 方法和 listIterator 方法都会产生 "fail-fast" 问题
  * if the vector is structurally modified at any time after the iterator is
  * created, in any way except through the iterator's own
  * {@link ListIterator#remove() remove} or
@@ -58,7 +58,7 @@ import java.util.function.UnaryOperator;
  * {@link ConcurrentModificationException}.  Thus, in the face of
  * concurrent modification, the iterator fails quickly and cleanly, rather
  * than risking arbitrary, non-deterministic behavior at an undetermined
- * time in the future.  The {@link Enumeration Enumerations} returned by
+ * time in the future.  The {@link Enumeration Enumerations} returned by            elements() 方法返回的 Enumerations 不会有 "fail-fast" 问题。
  * the {@link #elements() elements} method are <em>not</em> fail-fast.
  *
  * <p>Note that the fail-fast behavior of an iterator cannot be guaranteed
@@ -72,8 +72,8 @@ import java.util.function.UnaryOperator;
  * <p>As of the Java 2 platform v1.2, this class was retrofitted to
  * implement the {@link List} interface, making it a member of the
  * <a href="{@docRoot}/../technotes/guides/collections/index.html">
- * Java Collections Framework</a>.  Unlike the new collection
- * implementations, {@code Vector} is synchronized.  If a thread-safe
+ * Java Collections Framework</a>.  Unlike the new collection           不像新的集合实现，Vector 是同步的。如果不需要一个线程
+ * implementations, {@code Vector} is synchronized.  If a thread-safe   安全的实现，建议用 ArrayList 去替换 Vector。
  * implementation is not needed, it is recommended to use {@link
  * ArrayList} in place of {@code Vector}.
  *

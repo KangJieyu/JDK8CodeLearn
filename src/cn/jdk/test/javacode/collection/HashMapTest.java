@@ -1,4 +1,4 @@
-package cn.jdk.test.javacode.collections;
+package cn.jdk.test.javacode.collection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.Map;
  * @Date: 2023/3/13 11:39
  * @Author: KangJieyu
  */
-public class HashMapTests {
+public class HashMapTest {
     public static void main(String[] args) {
         // 创建初始容量为 16 的 HashMap
 //        Map<String, String> map = new HashMap<>();

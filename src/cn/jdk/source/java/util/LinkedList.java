@@ -28,15 +28,15 @@ package java.util;
 import java.util.function.Consumer;
 
 /**
- * Doubly-linked list implementation of the {@code List} and {@code Deque}
- * interfaces.  Implements all optional list operations, and permits all
+ * Doubly-linked list implementation of the {@code List} and {@code Deque}  双向链表实现了 List 和 Deque 接口。
+ * interfaces.  Implements all optional list operations, and permits all    实现了所有可选的 list 操作，并且允许所有的元素，包括 null 值。
  * elements (including {@code null}).
  *
- * <p>All of the operations perform as could be expected for a doubly-linked
- * list.  Operations that index into the list will traverse the list from
+ * <p>All of the operations perform as could be expected for a doubly-linked    双向链表所有的操作执行都是可预期的。
+ * list.  Operations that index into the list will traverse the list from       链表索引的操作将会从头或尾遍历，无论是否接近指定索引。
  * the beginning or the end, whichever is closer to the specified index.
  *
- * <p><strong>Note that this implementation is not synchronized.</strong>
+ * <p><strong>Note that this implementation is not synchronized.</strong>   注意这个的实现不是同步的。
  * If multiple threads access a linked list concurrently, and at least
  * one of the threads modifies the list structurally, it <i>must</i> be
  * synchronized externally.  (A structural modification is any operation
@@ -51,7 +51,7 @@ import java.util.function.Consumer;
  * unsynchronized access to the list:<pre>
  *   List list = Collections.synchronizedList(new LinkedList(...));</pre>
  *
- * <p>The iterators returned by this class's {@code iterator} and
+ * <p>The iterators returned by this class's {@code iterator} and           "fail-fast" 问题。
  * {@code listIterator} methods are <i>fail-fast</i>: if the list is
  * structurally modified at any time after the iterator is created, in
  * any way except through the Iterator's own {@code remove} or

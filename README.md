@@ -2,6 +2,7 @@
 # 集合
 ## HashMap
 ![HashMap继承关系图](images/HashMapRelation.png)
+
 `HashMap` 和 `HashTable` 通常是等效的，主要差别在于空值的存储。
 
 影响 `HashMap` 性能的两个因素: **初始容量**和**加载因子**
@@ -35,9 +36,10 @@ public class HashMap {
     int threshold;
 }
 ```
->`HashMap` 底层为数组存储，元素存储以 数组+链表/红黑树 结构，转为红黑树时 `MIN_TREEIFY_CAPACITY` 和
-> `TREEIFY_THRESHOLD` 一起判断。当数组容量达到64且链表节点达到8个(添加节点)时才会转为红黑树，否则只会对数组进行扩容。
+>`HashMap` 底层为数组存储，元素存储以 数组+链表/红黑树 结构，转为红黑树时 `MIN_TREEIFY_CAPACITY` 和`TREEIFY_THRESHOLD` 一起判断。
+> 当数组容量达到64且链表节点达到8个(添加节点)时才会转为红黑树，否则只会对数组进行扩容。
 > 当条目个数达到 0.75*容量 或 链表长度为8且容量小于64 时会扩容。
+> 发生碰撞后，当链表长度大于 8 后，进入 `treeifyBin()` 判断 `HashMap` 的容量是否小于 64，为 `true` 时只进行扩容。
 ### HashMap 对象创建
 1. new HashMap<>();
 
@@ -287,3 +289,29 @@ public class ArrayList {
    }
 }
 ```
+## HashTable
+![HashTable继承关系图](images/HashTableRelation.png)
+`HashTable` 集合也是存储 k-v 映射集合，但是它的 key 和 value 都不允许存储 `null`。
+
+当一个对象作为 `key` 时，这个对象必须重写 `hashCode` 和 `equals` 方法。
+
+同 `HashMap` 一样，也有 **加载因子** 和 **初始容量** 影响它的性能。
+
+同样存在 `fail-fast` 问题，需要用 `Iterator` 自带的方法。
+
+## Vector
+![Vector继承关系图](images/VectorRelation.png)
+`Vector` 是个可变长的数组，底层用 `protected Object[] elementData;` 来存储元素，可像数组一样通过下标访问元素。
+
+`Vector` 是线程安全的。
+
+用 `iterator()` 或 `listIterator()` 存在 `fail-fast` 问题，需要用 `iterator` 自带方法。另外，`elements()` 方法不会造成 `fail-fast` 问题。
+
+## LinkedList
+![LinkedList继承关系图](images/LinkedListRelation.png)
+是一个双向链表，允许存储任何类型的值，包括 `null` 值。实现也是非线程安全的。
+
+同样存在"fail-fast"问题。
+
+## ConcurrentHashMap
+支持高并发线程安全的实现，可用来替换 `HashTable`。

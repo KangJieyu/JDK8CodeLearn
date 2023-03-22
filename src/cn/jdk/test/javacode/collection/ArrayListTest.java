@@ -1,4 +1,4 @@
-package cn.jdk.test.javacode.collections;
+package cn.jdk.test.javacode.collection;
 
 import java.util.ArrayList;
 import java.util.List;

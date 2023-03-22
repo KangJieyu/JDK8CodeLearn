@@ -34,43 +34,43 @@ import java.util.function.BiFunction;
 import sun.misc.SharedSecrets;
 
 /**
- * This class implements a hash table, which maps keys to values. Any
- * non-<code>null</code> object can be used as a key or as a value. <p>
+ * This class implements a hash table, which maps keys to values. Any       一个 k-v 映射的 Hash Table 的实现类。任何
+ * non-<code>null</code> object can be used as a key or as a value. <p>     非 null 的对象能够被作为一个 key 或 value。
  *
- * To successfully store and retrieve objects from a hashtable, the
- * objects used as keys must implement the <code>hashCode</code>
+ * To successfully store and retrieve objects from a hashtable, the     从 hashtable 中成功的存储或检索对象，对象作为 keys
+ * objects used as keys must implement the <code>hashCode</code>        必须实现 hashCode 方法和 equals 方法。
  * method and the <code>equals</code> method. <p>
  *
- * An instance of <code>Hashtable</code> has two parameters that affect its
- * performance: <i>initial capacity</i> and <i>load factor</i>.  The
- * <i>capacity</i> is the number of <i>buckets</i> in the hash table, and the
+ * An instance of <code>Hashtable</code> has two parameters that affect its     hashtable 有两个参数影响它的性能：初始容量和加载因子。
+ * performance: <i>initial capacity</i> and <i>load factor</i>.  The            容量是 hashtable 中桶的数量，初始容量仅仅是 hash table
+ * <i>capacity</i> is the number of <i>buckets</i> in the hash table, and the   被创建时候的容量。
  * <i>initial capacity</i> is simply the capacity at the time the hash table
- * is created.  Note that the hash table is <i>open</i>: in the case of a "hash
- * collision", a single bucket stores multiple entries, which must be searched
- * sequentially.  The <i>load factor</i> is a measure of how full the hash
+ * is created.  Note that the hash table is <i>open</i>: in the case of a "hash 注意，hashtable 是"开放"的：在"hash碰撞"的情况下，一个桶
+ * collision", a single bucket stores multiple entries, which must be searched  存储多个条目，必须按顺序检索。
+ * sequentially.  The <i>load factor</i> is a measure of how full the hash      加载因子是在 hashtable 容量自动增长之前测量允许得到最大的容量。
  * table is allowed to get before its capacity is automatically increased.
- * The initial capacity and load factor parameters are merely hints to
- * the implementation.  The exact details as to when and whether the rehash
+ * The initial capacity and load factor parameters are merely hints to          初始容量和加载因子仅仅是实现的提示。
+ * the implementation.  The exact details as to when and whether the rehash     关于什么时候以及是否调用rehash方法的确切细节取决于实现。
  * method is invoked are implementation-dependent.<p>
  *
- * Generally, the default load factor (.75) offers a good tradeoff between
- * time and space costs.  Higher values decrease the space overhead but
- * increase the time cost to look up an entry (which is reflected in most
+ * Generally, the default load factor (.75) offers a good tradeoff between      一般来说，默认的加载因子 0.75 在时间和空间的消耗上提供了
+ * time and space costs.  Higher values decrease the space overhead but         很好的权衡。高的值减少空间上的开销，但是在查找条目上增加了时间
+ * increase the time cost to look up an entry (which is reflected in most       上的消耗(影响大多数的 HashTable 操作，包括 get 和 put 操作)。
  * <tt>Hashtable</tt> operations, including <tt>get</tt> and <tt>put</tt>).<p>
  *
- * The initial capacity controls a tradeoff between wasted space and the
+ * The initial capacity controls a tradeoff between wasted space and the    初始容量在空间的花费和时间的消耗(rehash 操作)之间进行权衡。
  * need for <code>rehash</code> operations, which are time-consuming.
- * No <code>rehash</code> operations will <i>ever</i> occur if the initial
- * capacity is greater than the maximum number of entries the
- * <tt>Hashtable</tt> will contain divided by its load factor.  However,
+ * No <code>rehash</code> operations will <i>ever</i> occur if the initial  如果初始容量比 hashtable 将包含的最大条目数量除以它的加载因子
+ * capacity is greater than the maximum number of entries the               还要大，这将不会有 rehash 发生。
+ * <tt>Hashtable</tt> will contain divided by its load factor.  However,    不过，设置太大的初始容量会浪费空间。
  * setting the initial capacity too high can waste space.<p>
  *
- * If many entries are to be made into a <code>Hashtable</code>,
- * creating it with a sufficiently large capacity may allow the
+ * If many entries are to be made into a <code>Hashtable</code>,    如果有许多条目放入 Hashtable，创建一个指定大小容量的 hashtable
+ * creating it with a sufficiently large capacity may allow the     来存储条目是更加有效的，比起让它需要扩容时 rehash。
  * entries to be inserted more efficiently than letting it perform
  * automatic rehashing as needed to grow the table. <p>
  *
- * This example creates a hashtable of numbers. It uses the names of
+ * This example creates a hashtable of numbers. It uses the names of    这是一个创建一定数量的 hashtable 例子。它使用数字的名字作为 keys:
  * the numbers as keys:
  * <pre>   {@code
  *   Hashtable<String, Integer> numbers
@@ -79,14 +79,14 @@ import sun.misc.SharedSecrets;
  *   numbers.put("two", 2);
  *   numbers.put("three", 3);}</pre>
  *
- * <p>To retrieve a number, use the following code:
+ * <p>To retrieve a number, use the following code:         去查找一个数字，代码如下:
  * <pre>   {@code
  *   Integer n = numbers.get("two");
  *   if (n != null) {
  *     System.out.println("two = " + n);
  *   }}</pre>
  *
- * <p>The iterators returned by the <tt>iterator</tt> method of the collections
+ * <p>The iterators returned by the <tt>iterator</tt> method of the collections     "fail-fast" 问题
  * returned by all of this class's "collection view methods" are
  * <em>fail-fast</em>: if the Hashtable is structurally modified at any time
  * after the iterator is created, in any way except through the iterator's own
@@ -109,11 +109,11 @@ import sun.misc.SharedSecrets;
  * implement the {@link Map} interface, making it a member of the
  * <a href="{@docRoot}/../technotes/guides/collections/index.html">
  *
- * Java Collections Framework</a>.  Unlike the new collection
- * implementations, {@code Hashtable} is synchronized.  If a
+ * Java Collections Framework</a>.  Unlike the new collection           Java 集合框架。不像新的集合实现， HashTable 是同步的。
+ * implementations, {@code Hashtable} is synchronized.  If a            如果不需要一个线程安全的实现，推荐使用 HashMap 替换 HashTable。
  * thread-safe implementation is not needed, it is recommended to use
- * {@link HashMap} in place of {@code Hashtable}.  If a thread-safe
- * highly-concurrent implementation is desired, then it is recommended
+ * {@link HashMap} in place of {@code Hashtable}.  If a thread-safe     如果想要实现一个高并发的线程安全的实现，建议使用 ConcurrentHashMap
+ * highly-concurrent implementation is desired, then it is recommended  替换 HashTable。
  * to use {@link java.util.concurrent.ConcurrentHashMap} in place of
  * {@code Hashtable}.
  *
